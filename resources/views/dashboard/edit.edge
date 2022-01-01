@@ -1,0 +1,82 @@
+@layout('layouts/main')
+@section('body')
+@if(link.user_id != auth.user.id)
+<script>window.location.href = '/dashboard';</script>
+@endif
+<div class="px-4 py-5 my-5 text-center">
+  <h1 class="display-5 fw-bold">Редактирование ссылки</h1><br>
+  <div class="col-lg-6 mx-auto">
+    <form class="p-5 border rounded-3 bg-light" action="/api/editLink/{{ link.id }}" method="post" enctype="multipart/form-data">
+      {{ csrfField() }}
+      <div class="input-group mb-3">
+        <input type="file" class="form-control" id="coverInput" name="cover_new" accept="image/*">
+        <label class="input-group-text" for="coverInput">Обложка</label>
+      </div>
+      <div class="form-floating mb-3">
+        <input type="text" name="title" class="form-control" id="flotingName" value="{{ link.name }}" placeholder="Название" required>
+        <label for="flotingName">* Название</label>
+      </div>
+      <div class="form-floating mb-3">
+        <input type="text" name="artist" class="form-control" value="{{ link.artists }}" id="floatingMainArtist" placeholder="Главный исполнитель" required>
+        <label for="floatingMainArtist">* Исполнитель</label>
+      </div>
+      @if(link.apple)
+      <div class="form-floating mb-3">
+        <input type="url" name="apple" value="{{ link.apple }}" class="form-control" id="floatingMainArtist" placeholder="Link">
+        <label for="floatingMainArtist">Ссылка на Apple Music</label>
+      </div>
+      @else
+      <div class="form-floating mb-3">
+        <input type="url" name="apple" class="form-control" id="floatingMainArtist" placeholder="Link">
+        <label for="floatingMainArtist">Ссылка на Apple Music</label>
+      </div>
+      @endif
+      @if(link.spotify)
+      <div class="form-floating mb-3">
+        <input type="url" name="spotify" value="{{ link.spotify }}" class="form-control" id="floatingMainArtist" placeholder="Link">
+        <label for="floatingMainArtist">Ссылка на Spotify</label>
+      </div>
+      @else
+      <div class="form-floating mb-3">
+        <input type="url" name="spotify" class="form-control" id="floatingMainArtist" placeholder="Link">
+        <label for="floatingMainArtist">Ссылка на Spotify</label>
+      </div>
+      @endif
+      @if(link.vk)
+      <div class="form-floating mb-3">
+        <input type="url" name="vk" value="{{ link.vk }}" class="form-control" id="floatingMainArtist" placeholder="Link">
+        <label for="floatingMainArtist">Ссылка на ВКонтакте</label>
+      </div>
+      @else
+      <div class="form-floating mb-3">
+        <input type="url" name="vk" class="form-control" id="floatingMainArtist" placeholder="Link">
+        <label for="floatingMainArtist">Ссылка на ВКонтакте</label>
+      </div>
+      @endif
+      @if(link.youtube)
+      <div class="form-floating mb-3">
+        <input type="url" name="yt" value="{{ link.youtube }}" class="form-control" id="floatingMainArtist" placeholder="Link">
+        <label for="floatingMainArtist">Ссылка на YouTube</label>
+      </div>
+      @else
+      <div class="form-floating mb-3">
+        <input type="url" name="yt" class="form-control" id="floatingMainArtist" placeholder="Link">
+        <label for="floatingMainArtist">Ссылка на YouTube</label>
+      </div>
+      @endif
+      @if(link.yandex)
+      <div class="form-floating mb-3">
+        <input type="url" name="yandex" value="{{ link.yandex }}" class="form-control" id="floatingMainArtist" placeholder="Link">
+        <label for="floatingMainArtist">Ссылка на Яндекс Музыку</label>
+      </div>
+      @else
+      <div class="form-floating mb-3">
+        <input type="url" name="yandex"  class="form-control" id="floatingMainArtist" placeholder="Link">
+        <label for="floatingMainArtist">Ссылка на Яндекс Музыку</label>
+      </div>
+      @endif
+      <button class="w-100 btn btn-lg btn-primary" type="submit">Отредактировать</button>
+    </form>
+  </div>
+</div>
+@endsection

@@ -1,0 +1,21 @@
+@layout('layouts/main')
+@section('body')
+<div class="px-4 py-5 my-5 text-center">
+  <h1 class="display-5 fw-bold">Мои ссылки</h1><br>
+  <div class="col-lg-8 mx-auto">
+    <div class="list-group">
+      @each(item in data)
+      <a href="/{{ item.id }}" class="list-group-item list-group-item-action d-flex gap-3 py-3" aria-current="true">
+        <img src="{{ item.cover }}" alt="twbs" width="32" height="32" class="rounded-circle flex-shrink-0">
+        <div class="d-flex gap-2 w-100 justify-content-between">
+          <div>
+            <h4 class="mb-0">{{ item.artists }} - {{ item.name }}</h4>
+          </div>
+        </div>
+      </a>
+      <button class="btn btn-outline-primary" onclick="location.href='/dashboard/links/edit/{{ item.id }}'">Редактировать</button>
+      @endeach
+    </div>
+  </div>
+</div>
+@endsection

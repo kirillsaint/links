@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>{{ link.artists }} - {{ link.name }} | Links</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta property="og:url" content="{{ link.cover }}">
+<meta property="og:title" content="{{ link.artists }} - {{ link.name }}">
+<meta property="og:description" content="{{ link.artists }} - {{ link.name }}">
+<meta property="og:image" content="{{ link.cover }}">
+<meta property="og:image:width" content="150">
+<meta property="og:image:height" content="150">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="{{ link.cover }}">
+<meta name="twitter:title" content="{{ link.artists }} - {{ link.name }}">
+<meta name="twitter:description" content="{{ link.artists }} - {{ link.name }}">
+<meta name="twitter:image" content="{{ link.cover }}">
+<meta name="twitter:image:width" content="150">
+<meta name="twitter:image:height" content="150">
+
+<link rel="apple-music-app-icon" href="fonts/logo-dark.svg">
+<link rel="apple-touch-icon-precomposed" href="fonts/logo-dark.svg">
+<link rel="apple-touch-icon" href="fonts/logo-dark.svg">
+<link rel="icon" href="favicon.ico">
+<style>
+
+        /* Modal CSS */
+        .modal-container {
+            position: absolute; /* Fallback to absolute if browser doesn't support fixed */
+            position: fixed;
+            z-index: 999999;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.75);
+            padding:0.5em;
+        }
+
+        .modal {
+            transform: translateY(-50%);
+            position: relative;
+            top: 50%;
+            font-family: "Segoe UI", Helvetica, Arial, sans-serif;
+            background: #fff;
+            margin: 0 auto;
+            border-radius: 4px;
+            width: 100%;
+            max-width: 25em;
+            padding: 1em;
+        }
+
+        .modal-body {
+            font-size: 0.8em;
+            padding: 1em 0;
+        }
+
+        .modal-body p {
+            margin: 0.75em 0;
+            color: #555;
+        }
+
+        .modal-input {
+            display: block;
+            padding: 0.5em;
+            width: 100%;
+        }
+
+        .modal-button {
+            width: 100%;
+            background: rgb(59 121 236);
+            color: #fff;
+            font-size: 1.25em;
+            border: none;
+            padding: 0.5em;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top:0.5em;
+        }
+
+        .modal-close {
+            float: right;
+            cursor: pointer;
+            opacity: 0.4;
+            font-size: 1.5em;
+            line-height: 0.75em;
+        }
+
+        /* Ads */
+        .MMR.LINKS_ad {
+            position: relative;
+            font-family: 'Segoe UI', 'Helvetica', Arial, sans-serif;
+            background:rgb(47, 103, 223);
+            padding:0.5em 1em;
+            font-size:0.9rem;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .MMR.LINKS_ad b {
+            display:inline-block;
+            color:#fff;
+            font-weight:600;
+            margin-bottom:0.5em;
+        }
+
+        .MMR.LINKS_ad p {
+            font-size:0.85em;
+            color:#fff;
+            opacity:0.75;
+        }
+        .MMR.LINKS_ad a {
+            text-decoration: none;
+            color:inherit;
+        }
+
+        .display_ad {
+            display: flex;
+            justify-content: center;
+            position: relative;
+            z-index: 555;
+        }
+
+        .mmtwrappos {
+            position: relative;
+            z-index: 5;
+            padding: 10px;
+            margin-bottom: 0!important;
+        }
+
+        /* Include Common Theme CSS */
+        /* Common to all themes */
+
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            overflow-x: hidden;
+            background: #fff;
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            min-height: 100vh;
+            padding: 0 1em;
+        }
+
+        #content {
+            position: relative;
+            padding: 1em 5px;
+            z-index: 5555;
+            width: 100%;
+            margin: 0 auto 1em auto;
+            max-width: 410px;
+        }
+
+        #container {
+            left: 0;
+            right: 0;
+            width:100%;
+            text-align: center;
+        }
+
+        .platform-list {
+            width: 100%;
+            margin: 0 auto;
+            overflow:hidden;
+            border-radius: 0 0 5px 5px;
+            box-shadow: none;
+            background: none;
+        }
+
+        .platforms-list__name {
+            padding: 1.2em 1.5em;
+            letter-spacing: 1px;
+            text-align: center;
+            font-family: 'Segoe UI', 'Helvetica', 'Arial', sans-serif;
+            width: 100%;
+            max-width: 40em;
+            font-size: 1em;
+            color: #fff;
+            border-radius: 0;
+            background: none;
+            font-weight: bold;
+            margin: 0.5em 0;
+
+        }
+
+        .platforms-list__container {
+            width: 100%;
+            margin-bottom:1em;
+        }
+
+        @media(max-width:700px) {
+            .platforms-list__name {
+                font-size: 1em;
+            }
+        }
+
+        .music-link__container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding:0.7em 1em;
+            border-top:1px solid #f6f6f6;
+            border-bottom:1px solid #f6f6f6;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .music-link__container:last-child {
+            border-bottom: none;
+        }
+
+        .music-link__container.disabled {
+            pointer-events: none;
+            opacity: 0.6;
+            cursor: default;
+        }
+
+        .music-link__text {
+            pointer-events: none;
+            text-align: center;
+            font-weight: 500;
+            width: 100%;
+            font-family: 'Segoe UI', Helvetica, Arial, sans-serif;
+        }
+
+        .music-link__logo {
+            pointer-events: none;
+            float: left;
+            width: 7em;
+        }
+
+        .music-link__logo-container {
+            height: 2.25em;
+            display: flex;
+            align-items: center;
+        }
+
+        .music-link__custom-platform {
+            float: left;
+            font-size: 1.1em;
+            width: 100%;
+            max-width: 12em;
+            text-align: left;
+            font-family: Arial;
+            font-weight: 600;
+            word-break: break-word;
+        }
+
+        .music-link__button {
+            font: 400 13.3333px Arial;
+            text-decoration: none;
+            float: right;
+            padding: 0.5em 1em;
+            background: #fff;
+            color: #333;
+            border: 1px solid rgb(218 218 218);
+            font-weight: bold;
+            
+            cursor: pointer;
+        }
+
+        .music-link__button:hover {
+            background: rgb(60, 60, 60);
+            border: 1px solid transparent;
+            color: #fff;
+        }
+
+        .music-link__social-media {
+            display: inline-block;
+            padding: 0 0.15em;
+            text-decoration: none;
+            color: inherit;
+            margin: 0.75em 0.25em;
+        }
+
+        .music-link__social-media img {
+            opacity: 0.45;
+            vertical-align: middle;
+        }
+
+        .music-link__container:not(.music-link__container--custom-text):hover {
+            cursor: pointer;
+        }
+
+        /* YouTube Embed */
+        #content .youtube-embed {
+            margin-top:1em;
+            position: relative;
+            width:100%;
+            background: #19202b;
+            padding-bottom: 52.1%; /* 16:9 */  padding-top: 15px;
+        }
+
+        #content .youtube-embed iframe {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+        }
+
+
+
+            #content {
+                max-width: 410px;
+            }
+
+        /* Banner */
+        .banner {
+            font-family: "Segoe UI", Helvetica, Arial, sans-serif;
+            background: rgb(189, 189, 189);
+            border-radius: 5px;
+            padding: 0.5em;
+            margin-bottom: 0.5em;
+        }
+
+        .banner--success {
+            background: #31c171;
+            color: #fff;
+        }
+
+        /* Footer */
+        .footer__cookie-consent {
+            display:block;
+            color:#ccc;
+            text-decoration: none;
+            font-family:"Segoe UI", Helvetica, Arial, sans-serif;
+            font-size: 11px;
+        }
+        /* Include Theme CSS */
+            #container {
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                background:#0a0a0a;
+                background-size: cover;
+                background-position: 0 -180px;
+                height: 100vh;
+            }
+
+            #bg_container {
+                position: fixed;
+                top: -50%;
+                left: -50%;
+                width: 200%;
+                height: 200%;
+                -o-transform: translate3d(0,0,0);
+                -ms-transform: translate3d(0,0,0);
+                -moz-transform: translate3d(0,0,0);
+                -webkit-transform: translate3d(0,0,0);
+            }
+
+            #bg_img {
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                margin: auto;
+                min-width: 55%;
+                min-height: 55%;
+                -webkit-filter: blur(34px);
+                -moz-filter: blur(34px);
+                -o-filter: blur(34px);
+                -ms-filter: blur(34px);
+                filter: blur(34px);
+            }
+
+            .platform-list {
+                background: #fff;
+                box-shadow: 0px 2px 12px rgba(0, 0, 0, 0.25);
+            }
+
+            .platforms-list__name {
+                background: #111;
+                font-weight: 400;
+                margin: 0;
+            }
+
+            
+
+            .music-link__container:not(.music-link__container--custom-text):hover {
+                box-shadow: 0px 1px 5px rgba(0,0,0,0.2);
+                border-top:1px solid transparent;
+                border-bottom: 1px solid transparent;
+            }
+
+            .music-link__container--custom-text {
+                background: #f8f8f8;
+            }
+
+            .music-link__social-media-container {
+                background: #efefef;
+            }
+
+
+
+
+
+
+
+
+
+
+
+
+    </style>
+<script>
+        window['ga-disable-UA-157457758-1'] = true;
+    </script>
+<script async src="js_1"></script>
+<script>window.dataLayer = window.dataLayer || []; function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'UA-157457758-1');
+        gtag('config', 'UA-157457758-1', { 'anonymize_ip': true, 'allow_google_signals': false });
+    </script>
+</head>
+<body>
+<div id="container" class="container">
+<div id="bg_container" style="display:none">
+<img id="bg_img">
+</div>
+<div id="content">
+<div style="position:relative">
+<img id="user-artwork" src="{{ link.cover }}" style="display:block;width:100%;max-width:400px;min-height:400px" height="400">
+</div>
+
+<script>
+                var eArtwork = document.getElementById('user-artwork');
+                if (eArtwork) eArtwork.onload = function() {
+                    eArtwork.style.minHeight = 'unset';
+                    eArtwork.removeAttribute('height');
+                }
+            </script>
+<h1 class="platforms-list__name">
+<b>{{ link.name }}</b><br>{{ link.artists }}
+</h1>
+<div class="platforms-list__container">
+<div class="platform-list">
+@if(link.spotify)
+<div class="music-link__container">
+
+<span class="music-link__logo-container">
+<img class="music-link__logo" src="fonts/spotify.svg" alt="spotify">
+</span>
+<button class="music-link__button" onclick="location.href='{{ link.spotify }}'">Слушать</button>
+</div>
+@endif
+@if(link.apple)
+<div class="music-link__container">
+
+<span class="music-link__logo-container">
+<img class="music-link__logo" src="fonts/apple-music.svg" alt="apple-music">
+</span>
+<button class="music-link__button" onclick="location.href='{{ link.apple }}'">Слушать</button>
+</div>
+@endif
+@if(link.vk)
+<div class="music-link__container">
+
+<span class="music-link__logo-container">
+<img class="music-link__logo" src="fonts/vk-music.svg" alt="vk-music">
+</span>
+<button class="music-link__button" onclick="location.href='{{ link.vk }}'">Слушать</button>
+</div>
+@endif
+@if(link.youtube)
+<div class="music-link__container">
+
+<span class="music-link__logo-container">
+<img class="music-link__logo" src="fonts/youtube.svg" alt="youtube">
+</span>
+<button class="music-link__button" onclick="location.href='{{ link.youtube }}'">Слушать</button>
+</div>
+@endif
+@if(link.yandex)
+<div class="music-link__container">
+
+<span class="music-link__logo-container">
+<img class="music-link__logo" src="fonts/yandex-music.svg" alt="yandex-music">
+</span>
+<button class="music-link__button" onclick="location.href='{{ link.yandex }}'">Слушать</button>
+</div>
+@endif
+
+</div>
+</div>
+</div>
+
+<script>
+        //*** General Modal Functions ***//
+        function modalOpen(sModalQuery) {
+            var eModal = document.querySelector(sModalQuery);
+            if (eModal) eModal.style.display = 'block';
+        }
+
+        function modalClose(sModalQuery) {
+            var eModal = document.querySelector(sModalQuery);
+            if (eModal) eModal.style.display = 'none';
+        }
+
+        function modalsClose() {
+            // Set event Слушатьer for manage privacy buttons
+            var aModals = document.querySelectorAll('.modal-container');
+            for (var i = 0; i < aModals.length; i++) aModals[i].style.display = 'none';
+        }
+
+        // Set event Слушатьer for closing modals on click outside
+        document.addEventСлушатьer('click', function(e) {
+            if (e.target.classList.contains('modal-container')) modalsClose();
+            if (e.target.classList.contains('modal-close')) modalsClose();
+            if (e.target.classList.contains('modal-close-button')) modalsClose();
+        });
+    </script>
+
+
+<div id="privacy-modal__container" class="privacy-modal-container modal-container" style="display: none">
+<div id="privacy-modal" class="modal">
+<h3> <img src="fonts/shield-checkmark.svg" style="margin-right:0.25em;height:20px;position:relative;top:4px"> Privacy Notice <span class="modal-close">&times;</span></h3>
+<div class="modal-body">
+<p>MMR.LINKS would like permission to set cookies in order to track performance and show ads based on your interests.</p>
+</div>
+<button id="privacy-accept" class="modal-button">Accept</button>
+<p style="font-size:0.75em;color:#999;text-align:center;margin-top:1em">Your choices can be changed at any time.<br><a href="#" class="manage-privacy" style="color:#999">Click here</a> to manage permissions.</p>
+</div>
+</div>
+<div id="privacy-manage-modal__container" class="privacy-modal-container modal-container" style="display: none">
+<div id="privacy-modal" class="modal">
+<h3> <img src="fonts/shield-checkmark.svg" style="margin-right:0.25em;height:20px;position:relative;top:4px"> Manage Privacy <span class="modal-close">&times;</span></h3>
+<div class="modal-body">
+<p>Your data will only be used in accordance with your permissions. You can change these permissions at any time.</p>
+<p>MMR.LINKS reserves the right to set functional cookies required for delivery of our products.</p>
+<div class="permission" style="margin-bottom:1.5em">
+<h5>Allow Advertising Cookies</h5>
+<p>We work with third party advertisers who may set cookies to provide personalized advertisements that reflect your interests.</p>
+<input type="radio" name="privacy-radios-advertising" id="privacy__radio-advertising-allow"> <label for="privacy__radio-advertising-allow">Yes</label>
+<input type="radio" name="privacy-radios-advertising" id="privacy__radio-advertising-deny"> <label for="privacy__radio-advertising-deny">No</label>
+</div>
+<div class="permission" style="margin-bottom:1em">
+<h5>Allow Performance Cookies</h5>
+<p>We use Google Analytics to monitor our service. These cookies provide us with analytics and insight into how our platform is being used in order to improve our services.</p>
+<input type="radio" name="privacy-radios-performance" id="privacy__radio-performance-allow"> <label for="privacy__radio-performance-allow">Yes</label>
+<input type="radio" name="privacy-radios-performance" id="privacy__radio-performance-deny"> <label for="privacy__radio-performance-deny">No</label>
+</div>
+<button id="privacy-manage__save" class="modal-button">Save Settings</button>
+</div>
+</div>
+</div>
+
+<script>
+  document.getElementById('bg_container').style.display = "block";
+  document.getElementById('bg_img').src = "{{ link.cover }}";
+</script>
+<script defer src="js/beacon.min.js" data-cf-beacon="{"rayId":"6a1f3d9cbebb1fba","token":"7bf6d80b51224e87bff48a8b331f66d5","version":"2021.10.0","si":100}"></script>
+</body>
+</html>

@@ -1,0 +1,91 @@
+<div class="container">
+    <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
+      <a href="/" class="d-flex align-items-center col-md-3 mb-2 mb-md-0 text-dark text-decoration-none">
+        <b>Links</b>
+      </a>
+
+      <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
+        @loggedIn
+        <li><a href="/dashboard/index" class="nav-link px-2 link-secondary">Главная</a></li>
+        <li><a href="/dashboard/links" class="nav-link px-2 link-dark">Ссылки</a></li>
+        <li><a href="/dashboard/links/new" class="nav-link px-2 link-dark">Создать ссылку</a></li>
+        @else
+        <li><a href="/" class="nav-link px-2 link-secondary">Главная</a></li>
+        @endloggedIn
+      </ul>
+
+      <div class="col-md-3 text-end">
+        @loggedIn
+        <div class="dropdown">
+          <a class="btn btn-outline-primary me-2" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+            {{ auth.user.username}}
+          </a>
+
+          <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+            <li>
+              <form class="" action="{{ route('logout') }}" method="POST" id="logout">
+                {{ csrfField() }}
+                <a class="dropdown-item" href="" onClick="document.getElementById('logout').submit(); return false;">Выйти</a>
+              </form>
+            </li>
+          </ul>
+        </div>
+        @else
+        <button type="button" class="btn btn-outline-primary me-2" data-bs-toggle="modal" data-bs-target="#loginModal">Логин</button>
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#registerModal">Зарегистрироваться</button>
+        <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title text-dark" id="exampleModalLabel">Авторизация</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body text-dark">
+                <form class="p-3" action="{{ route('login') }}" method="post">
+                {{ csrfField() }}
+                  <div class="form-floating mb-3">
+                    <input type="email" name="email" class="form-control" id="flotingLogin" placeholder="Email" required>
+                    <label for="flotingLogin">Email</label>
+                  </div>
+                  <div class="form-floating mb-3">
+                    <input type="password" name="password" class="form-control" id="floatingPassword" placeholder="Пароль" required>
+                    <label for="flotingLogin">Пароль</label>
+                  </div>
+                  <input class="w-100 btn btn-lg btn-outline-primary" type="submit" name="btn_login" value="Войти">
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title text-dark" id="exampleModalLabel">Регистрация</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body text-dark">
+                <form class="p-3" action="{{ route('register') }}" method="post">
+                {{ csrfField() }}
+                  <div class="form-floating mb-3">
+                    <input type="text" name="username" class="form-control" id="flotingLogin" placeholder="Логин" required>
+                    <label for="flotingLogin">Логин</label>
+                  </div>
+                  <div class="form-floating mb-3">
+                    <input type="email" name="email" class="form-control" id="flotingLogin" placeholder="Email" required>
+                    <label for="flotingLogin">Email</label>
+                  </div>
+                  <div class="form-floating mb-3">
+                    <input type="password" name="password" class="form-control" id="floatingPassword" placeholder="Пароль" required>
+                    <label for="flotingLogin">Пароль</label>
+                  </div>
+                  <input class="w-100 btn btn-lg btn-outline-primary" type="submit" name="btn_login" value="Зарегистрироваться">
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        @endloggedIn
+      </div>
+    </header>
+</div>
